@@ -1,24 +1,24 @@
 package com.erwin.demos.contactbookapp;
 
-import com.erwin.Demos.contactbookapp.StoringInFile;
 import com.erwin.Demos.contactbookapp.Test;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 public class Engine {
 
     static Scanner s = Main.s;
 
-     static List<Contact> l = StoringInFile.l;
+    public static List<Contact> l = new CopyOnWriteArrayList<Contact>();
 
-    public static void createContact() throws Handler, IOException {
+    public static void createContact() throws Handler, IOException, FileNotFoundException, ClassNotFoundException {
 
         try {
             int cn;
-            do {
-
+            do { 
                 Contact c = new Contact();
                 String validName = Test.validatingName();
                 if (!validName.equalsIgnoreCase("Not Valid")) {
@@ -40,6 +40,8 @@ public class Engine {
                     throw new Handler("Please enter Valid email formate myEmail371@***.com");
                 }
                 l.add(c);
+             
+               
                 System.out.println("Contact saved successfully");
                 System.out.println("if you want to continue press 1 or press 0");
                 cn = s.nextInt();
@@ -64,16 +66,15 @@ public class Engine {
                     List<Contact> r = l.stream().filter(p -> p.getPhnnum() == num).collect(Collectors.toList());
                     System.out.println(r);
                     Main.runMenu();
-                } else if(i==2) {
+                } else if (i == 2) {
                     System.out.println("enter name");
                     String name = s.next();
                     List<Contact> rr = l.stream().filter(p -> p.getName().equals(name)).collect(Collectors.toList());
                     System.out.println(rr);
                     System.out.println("if you want to continue press 1 or press 0");
                     cn = s.nextInt();
-                }
-                else{
-                    
+                } else {
+
                 }
             } while (cn == 1);
             Main.runMenu();
@@ -116,7 +117,7 @@ public class Engine {
             Main.runMenu();
         } catch (Exception e) {
 
-            System.out.println("check your input and give");
+            System.out.println("\"\\t\\t\\t\\t\\t\\tcheck your input and give");
             deletContact(i);
 
         }
@@ -135,7 +136,7 @@ public class Engine {
                     System.out.println("enter number");
                     long unum = s.nextLong();
                     l.stream().filter(p -> p.getPhnnum() == num).forEach(c -> c.setPhnnum(unum));
-                    System.out.println("Contact Upadte sucssefully");
+                    System.out.println("\t\t\t\t\t\tContact Upadte sucssefully");
                     Main.runMenu();
                 }
                 if (u == 2) {
@@ -188,7 +189,7 @@ public class Engine {
 
     }
 
-    public static void viewContacts() throws IOException {
+    public static void viewContacts() throws IOException, FileNotFoundException, ClassNotFoundException {
 
         if (l.isEmpty()) {
             System.out.println("No_____Contacts !");

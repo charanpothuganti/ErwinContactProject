@@ -5,7 +5,8 @@
  */
 package com.erwin.demos.contactbookapp;
 
-import com.erwin.Demos.contactbookapp.StoringInFile;
+import com.erwin.Demos.contactbookapp.FileManipulation;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -14,7 +15,8 @@ import java.util.Scanner;
  * @author Mallick
  */
 public class Main {
-    
+     FileManipulation f=new FileManipulation();
+  
       public static Scanner s = new Scanner(System.in);
     
    enum Option{
@@ -29,18 +31,24 @@ public class Main {
         System.out.println("|        Erwin Contact book         |");
         System.out.println("+-----------------------------------+");
     }
-
-    static public void runMenu() throws IOException {
-        System.out.println("Please make a selection");
+ 
+    static public void runMenu() throws IOException, FileNotFoundException, ClassNotFoundException {
+        int n=0;
+   
         System.out.println("1) Add Contact");
         System.out.println("2) Find Contact");
         System.out.println("3) Remove Contact");
         System.out.println("4) Update Contact");
         System.out.println("5)  Contacts ");
-
-        System.out.println("6) Terminate");
-    
-        int n = s.nextInt();
+        System.out.println("6) Terminate\n");
+        System.out.println("\t\t\t\t\tPlease make a selection");
+        
+        try{
+        n = s.nextInt();
+        }catch(Exception e){
+            System.out.println("please Entre valid option with numeric Input");
+        
+        }
         if(n>Option.values().length)
         {
             System.out.println("invalid option ");
@@ -63,8 +71,8 @@ public class Main {
                 Engine.serach(i);
                 break;
             case REMOVE_CONTACT:
-                System.out.println("1)delet by number");
-                System.out.println("2)delet by Name");
+                System.out.println("1)delete by number");
+                System.out.println("2)delete by Name");
                 int nd = s.nextInt();
                 Engine.deletContact(nd);
                 break;
@@ -81,17 +89,21 @@ public class Main {
                 Engine.viewContacts();
                 break;
             case TERMINATE:
-                StoringInFile.writeToFile();
+                FileManipulation.writeToFile();
                 System.exit(0);
 
         }
         }
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, FileNotFoundException, ClassNotFoundException {
+        
+        
+          FileManipulation.readThroughFile();
         Main m = new Main();
         m.header();
         runMenu();
+       
 
     }
 
