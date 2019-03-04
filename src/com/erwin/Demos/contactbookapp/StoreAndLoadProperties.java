@@ -30,7 +30,7 @@ public class StoreAndLoadProperties {
     static String gettingProperties() throws FileNotFoundException, IOException {
 
         Properties p = new Properties();
-        FileInputStream fisp = new FileInputStream("C:\\Users\\Mallick\\Documents\\NetBeansProjects\\Projects\\JavaProjects\\src\\com\\erwin\\Demos\\info.properties");
+        FileInputStream fisp = new FileInputStream("C:\\Users\\Mallick\\Documents\\NetBeansProjects\\Projects\\ContactBookDb\\src\\com\\erwin\\Demos\\info.properties");
         p.load(fisp);
         String path = p.getProperty("path");
         System.out.println(path);

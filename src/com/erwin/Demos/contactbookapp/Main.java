@@ -6,8 +6,10 @@
 package com.erwin.demos.contactbookapp;
 
 import com.erwin.Demos.contactbookapp.FileManipulation;
+import com.erwin.Demos.dao.DBoperation;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 /**
@@ -69,10 +71,11 @@ public class Main {
                         Engine.serach(i);
                         break;
                     case REMOVE_CONTACT:
-                        System.out.println("1)delete by number");
-                        System.out.println("2)delete by Name");
+                        System.out.println("1)delete by Name");
+                        System.out.println("2)delete by Number");
                         int nd = s.nextInt();
                         Engine.deletContact(nd);
+                       
                         break;
 
                     case UPDATE_CONTACT:
@@ -87,20 +90,21 @@ public class Main {
                         Engine.viewContacts();
                         break;
                     case TERMINATE:
-                        FileManipulation.writeToFile();
+//                        FileManipulation.writeToFile();
                         System.exit(0);
 
                 }
             }
         } catch (Exception e) {
-            System.out.println("GIVE VALDINPUT");
+            e.printStackTrace();
           
         }
     }
 
-    public static void main(String[] args) throws IOException, FileNotFoundException, ClassNotFoundException {
+    public static void main(String[] args) throws IOException, FileNotFoundException, ClassNotFoundException, SQLException {
 
-        FileManipulation.readThroughFile();
+       
+                DBoperation.getData();
         Main m = new Main();
         m.header();
         runMenu();

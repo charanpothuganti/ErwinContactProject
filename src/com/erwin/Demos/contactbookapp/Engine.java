@@ -1,24 +1,26 @@
 package com.erwin.demos.contactbookapp;
 
 import com.erwin.Demos.contactbookapp.Test;
+import com.erwin.Demos.dao.DBoperation;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class Engine {
 
     static Scanner s = Main.s;
-
     public static List<Contact> l = new CopyOnWriteArrayList<Contact>();
-
-    public static void createContact() throws Handler, IOException, FileNotFoundException, ClassNotFoundException {
+    public static void createContact() throws Handler, IOException, FileNotFoundException, ClassNotFoundException, SQLException {
 
         try {
             int cn;
-            do { 
+            do {
                 Contact c = new Contact();
                 String validName = Test.validatingName();
                 if (!validName.equalsIgnoreCase("Not Valid")) {
@@ -26,7 +28,6 @@ public class Engine {
                 } else {
                     throw new Handler("Only characters are allowed");
                 }
-
                 Long phnNumber = Test.validatingNumber();
                 if (phnNumber == 0) {
                     throw new Handler("Enter Only numeric values with exact length of 10");
@@ -39,14 +40,17 @@ public class Engine {
                 } else {
                     throw new Handler("Please enter Valid email formate myEmail371@***.com");
                 }
+                boolean b = DBoperation.insertData(c);
+                if (b) {
+                    System.out.println("Succ");
+                } else {
+                    System.out.println("fail");
+                }
                 l.add(c);
-             
-               
                 System.out.println("Contact saved successfully");
                 System.out.println("if you want to continue press 1 or press 0");
                 cn = s.nextInt();
             } while (cn == 1);
-
             Main.runMenu();
         } catch (Handler e) {
             System.out.println(e.getWarning());
@@ -61,7 +65,6 @@ public class Engine {
 
                 if (i == 1) {
                     System.out.println("enter number");
-
                     long num = s.nextLong();
                     List<Contact> r = l.stream().filter(p -> p.getPhnnum() == num).collect(Collectors.toList());
                     System.out.println(r);
@@ -87,30 +90,57 @@ public class Engine {
 
     public static void deletContact(int i) {
         int cn = 0;
-
         try {
             do {
-                if (i == 1) {
-
+                if (i == 2) {
                     System.out.println("enter number of contact to be delete");
                     long num = s.nextLong();
                     l.stream().filter(p -> p.getPhnnum() == num).forEach(c -> {
-                        l.remove(c);
-                        System.out.println("deleted sucssfully");
-                    });
+                        l.remove(c);});
+                        System.out.println("do you want to delete permenantly 1)yes 2)No");
+                        int yes=s.nextInt();
+                        if(yes==1){
+                            try {
+                                boolean b=DBoperation.deleteData(2, Long.toString(num));
+                                if(b)
+                                    System.out.println("deleted from datdabase");
+                                else
+                                    System.out.println("Error");
+                            } catch (ClassNotFoundException ex) {
+                                Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (SQLException ex) {
+                                Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+}
+                        else
+                            System.out.println("deleted temparaly");
+                
                     System.out.println("want to continue press 1 or press 0");
                     cn = s.nextInt();
                 } else {
                     System.out.println("enter Name to be delete ");
                     String name = s.next();
+               
                     l.stream().filter(p -> p.getName().equalsIgnoreCase(name)).forEach(c -> {
                         l.remove(c);
-                        System.out.println("deleted sucssfully");
-
+                              System.out.println("do you want to delete permenantly 1)yes 2)No");
+                        int yes=s.nextInt();
+                        if(yes==1){
+                            try {
+                                boolean b=DBoperation.deleteData(2, name);
+                                if(b)
+                                    System.out.println("deleted from datdabase");
+                                else
+                                    System.out.println("Error");
+                             } catch (ClassNotFoundException | SQLException | IOException ex) {
+                                Logger.getLogger(Engine.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+}
+                        else
+                            System.out.println("deleted temparaly");
                     });
                     System.out.println("want to continue press 1 or press 0");
                     cn = s.nextInt();
-
                 }
             } while (cn == 1);
 
@@ -134,8 +164,9 @@ public class Engine {
                 int u = s.nextInt();
                 if (u == 1) {
                     System.out.println("enter number");
-                    long unum = s.nextLong();
+                    long unum = s.nextLong();              
                     l.stream().filter(p -> p.getPhnnum() == num).forEach(c -> c.setPhnnum(unum));
+                    DBoperation.upDDb();
                     System.out.println("\t\t\t\t\t\tContact Upadte sucssefully");
                     Main.runMenu();
                 }
@@ -190,7 +221,6 @@ public class Engine {
     }
 
     public static void viewContacts() throws IOException, FileNotFoundException, ClassNotFoundException {
-
         if (l.isEmpty()) {
             System.out.println("No_____Contacts !");
 
