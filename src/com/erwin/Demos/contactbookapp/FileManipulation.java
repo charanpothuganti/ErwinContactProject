@@ -18,10 +18,11 @@ public class FileManipulation {
     public static void writeToFile() throws FileNotFoundException, IOException {
 
         try {   
-            FileOutputStream fos = new FileOutputStream(StoreAndLoadProperties.gettingProperties());
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(Engine.l);
-fos.close();
+            ObjectOutputStream oos;
+            try (FileOutputStream fos = new FileOutputStream(StoreAndLoadProperties.gettingProperties())) {
+                oos = new ObjectOutputStream(fos);
+                oos.writeObject(Engine.l);
+            }
 oos.close();
             System.out.println(Engine.l);
         } catch (IOException h) {

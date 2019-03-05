@@ -22,7 +22,7 @@ public class DBoperation {
 
     public static boolean insertData(Contact c) throws ClassNotFoundException, SQLException, IOException {
 
-        Connection con =  DataBaseConnection.getConnection();
+        Connection con = DataBaseConnection.getConnection();
         System.out.println(con);
         PreparedStatement pst = con.prepareStatement("insert into  contactbook values(?,?,?)");
         pst.setString(1, c.getName());
@@ -53,7 +53,7 @@ public class DBoperation {
             System.out.println("no data");
         }
     }
-       
+
     public static boolean deleteData(int i, String value) throws ClassNotFoundException, SQLException, IOException {
         Connection con = DataBaseConnection.getConnection();
         int d = 0;
@@ -69,21 +69,37 @@ public class DBoperation {
         }
         if (d != 0) {
             return true;
-        }
-        else
+        } else {
             return false;
-       
-         
-         
-         
-         
-         
-    
         }
 
-    public static void upDDb() {
-        
-    }
     }
 
+    public static void upDDb(Contact c, String Newvalue, int i) throws SQLException, ClassNotFoundException, IOException {
+        Connection con = DataBaseConnection.getConnection();
+        long phn = c.getPhnnum();
+        PreparedStatement pst = null;
+        if (i == 1) {
+            pst = con.prepareStatement("update contactbook set phonenumber=? where phonenumber=?");
+            pst.setLong(1, Long.parseLong(Newvalue));
+            pst.setLong(2, phn);
+            int r = pst.executeUpdate();
+            System.out.println("Update result" + r);
+        }
+        if (i == 2) {
+            System.out.println("entered");
+            pst = con.prepareStatement("update contactbook set name=? where phonenumber=?");
+            pst.setString(1, Newvalue);
+            pst.setLong(2, phn);
+            System.out.println("Update result" + pst.executeUpdate());
+        }
+        if (i == 3) {
+            pst = con.prepareStatement("update contactbook set email=? where phonenumber=?");
+            pst.setString(1, Newvalue);
+            pst.setLong(2, phn);
+            pst.executeUpdate();
+        }
 
+    }
+
+}
